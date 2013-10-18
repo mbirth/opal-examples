@@ -1,0 +1,53 @@
+IMPLEMENTATION RealFun
+
+-- Einzeilige Kommentare werden mit einem doppelten Minus eingeleitet.
+
+/*
+Kommentare 
+ueber mehrere Zeilen 
+sehen so aus.
+*/
+
+/* Fuer alle Berechnungen brauchen wir hier die Struktur Real,
+   die Fliesskommazahlen und ihre Operationen, wie z.B. *, +, 
+   und Konstanten, wie z.B. pi, bereitstellt.
+
+   Erlaeuterungen zur Basisstruktur Real findet Ihr unter 
+   http://uebb.cs.tu-berlin.de/infadm/opal/doc/kommentierteLib/doc/shortbib_toc.html
+   Dort koennt Ihr weitere, fuer die Loesung der Aufgaben evtl. 
+   notwendige Funktionen heraussuchen.
+*/
+
+IMPORT Real       COMPLETELY
+
+/*
+   Gegeben ist hier ein Beispiel einer Funktionsdefinition.
+   Diese Implementierung einer Funktion kann zwar von 
+   oasys uebersetzt werden, sie ist aber *nicht* korrekt.
+   Daher soll sie von Euch korrigiert werden.
+
+   Die Quadratfunktion:
+*/
+
+DEF square(X) == X * X
+
+DEF cube(X) == X * square(X)
+ 
+DEF reciprocal(X) == 1/X
+ 
+DEF ld(X) == ln(X)/ln(2)
+
+DEF circ(D) == pi/4 * square(D)
+
+-- Argument D: Durchmesser
+
+DEF vol(D,H) == circ(D) * H
+
+-- Argument D: Durchmesser
+-- Argument H: Hoehe des Zylinders
+
+DEF len(X,Y,Z) == sqrt(square(X) + square(Y) + square(Z))
+
+-- Argumente X,Y,Z sind die Koordinaten des Vektors
+
+

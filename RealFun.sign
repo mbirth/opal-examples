@@ -1,0 +1,25 @@
+SIGNATURE RealFun
+
+/* Diese Datei enthaelt die Schnittstelle (den Signaturteil 
+   der Struktur). Die eigentliche Implementierung muss von 
+   Euch in der Datei RealFun.impl vorgenommen werden. */
+
+IMPORT Real ONLY real
+
+/* Die Sorte real wird aus der Struktur Real importiert. 
+   Sie wird gebraucht, um die Definitions- und Wertebereiche
+   der folgenden Funktionen angeben zu koennen. */
+
+FUN square : real -> real 
+
+FUN cube : real -> real
+
+FUN reciprocal : real -> real
+
+FUN ld : real -> real
+
+FUN circ : real -> real
+
+FUN vol : real ** real -> real
+
+FUN len : real ** real ** real -> real

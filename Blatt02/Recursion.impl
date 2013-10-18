@@ -1,0 +1,64 @@
+IMPLEMENTATION Recursion
+
+IMPORT Nat COMPLETELY
+IMPORT Denotation COMPLETELY
+IMPORT Char COMPLETELY
+
+DEF plus == \\m,n . IF n = 0
+		      THEN m
+		      ELSE plus(succ(m), pred(n))
+		    FI
+
+DEF sum == \\m,n. IF m>n THEN 0
+                         ELSE m + sum(m+1,n)
+                  FI
+
+DEF in? == \\c,d. IF d = "" THEN false
+                  ELSE IF d ! 0 = c THEN true 
+                                    ELSE in?(c,delete(d,0,0))
+                       FI
+                  FI
+
+DEF mult == \\a,b. IF a>0 THEN b+mult(a-1,b) ELSE 0 FI
+/* Alternativ: IF a>1 THEN b+mult(a-1,b) ELSE b FI */
+
+DEF sumEven == \\m,n. IF m>n THEN 0
+                      ELSE IF m%2=0 THEN m + sumEven(m+1,n)
+                           ELSE sumEven(m+1,n) FI FI
+
+DEF count == \\c,d. IF d = "" THEN 0
+                    ELSE IF d ! 0 = c THEN 1+count(c,delete(d,0,0))
+                         ELSE count(c,delete(d,0,0)) FI FI
+
+DEF countDigits == \\d. IF d = "" THEN 0
+                        ELSE IF digit?(d!0) THEN 1+countDigits(delete(d,0,0))
+                             ELSE countDigits(delete(d,0,0)) FI FI
+
+
+
+/* TUT-Examples following */
+
+FUN h : nat ** nat -> nat ** nat
+DEF h == \\m,n. (h1(m,n), h2(m,n))
+
+FUN h1 : nat ** nat -> nat
+DEF h1 == \\m,n. IF m < n THEN 0 ELSE h1(m-n,n) + 1 FI
+
+FUN h2 : nat ** nat -> nat
+DEF h2 == \\m,n. IF m < n THEN m ELSE h2(m-n,n) FI
+
+
+FUN f : nat ** nat -> nat
+DEF f == \\a,b. IF a > b THEN f1(a,b,a)
+                         ELSE f1(b,a,b)
+                FI
+
+FUN f1 : nat ** nat ** nat -> nat
+DEF f1 == \\a,b,z. IF mod(a,b) = 0 THEN a
+                                   ELSE f1(a+z,b,z)
+                   FI
+
+FUN g : nat ** nat -> nat
+DEF g == \\a,b. IF b = 0 THEN a
+                         ELSE g(b,mod(a,b))
+                FI

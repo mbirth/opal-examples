@@ -1,0 +1,6 @@
+IMPLEMENTATION Example
+ 
+IMPORT Nat COMPLETELY
+
+DEF incdec == \\x . (x + 1, x - 1)
+

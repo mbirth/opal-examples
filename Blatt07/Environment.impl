@@ -1,0 +1,15 @@
+IMPLEMENTATION Environment
+
+IMPORT Denotation COMPLETELY
+IMPORT SafeNat COMPLETELY
+IMPORT Seq COMPLETELY
+
+DATA binding == binding(key: denotation, value: safeNat)
+DATA environment == environment(bindings: seq[binding])
+
+DEF emptyenv == environment(<>)
+
+DEF lookup(environment(<>),_) == error("Nicht gefunden")
+DEF lookup(environment(binding(k,v)::S),x) == IF k=x THEN v ELSE lookup(environment(S),x) FI
+
+DEF bind(environment(S),x,v) == environment(binding(x,v)::S)

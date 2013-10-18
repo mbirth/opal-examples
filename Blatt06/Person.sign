@@ -1,0 +1,14 @@
+SIGNATURE Person
+
+IMPORT Nat ONLY nat
+
+TYPE date == date(day   : nat,
+                  month : nat,
+                  year  : nat)
+
+TYPE person == person(name      : denotation,
+                      surname   : denotation,
+                      birthdate : date)
+
+
+

@@ -1,0 +1,30 @@
+IMPLEMENTATION ListFunc
+
+IMPORT Seq COMPLETELY
+IMPORT Nat COMPLETELY
+
+FUN myReduce : (nat**nat->nat)**nat->seq[nat]->nat
+DEF myReduce == \\f,e. \\s. IF <>?(s) THEN e
+                                      ELSE f(ft(s),myReduce(f,e)(rt(s)))
+                            FI
+
+FUN myZip : (nat**nat->nat)->seq[nat]**seq[nat]->seq[nat]
+DEF myZip == \\f. \\s1,s2. IF <>?(s1) or <>?(s2) THEN <>
+                                                 ELSE f(ft(s1),ft(s2))::myZip(f)(rt(s1),rt(s2))
+                           FI
+
+FUN myFold : (nat**nat->nat)**nat->seq[nat]->nat
+DEF myFold == \\f,e. \\s. IF <>?(s) THEN e
+                                    ELSE myFold(f,f(e,ft(s)))(rt(s))
+                          FI
+
+FUN newfD : seq[nat]->nat
+DEF newfD == \\s. myFold(-,2*ft(s))(s)
+
+FUN testfunc : nat**nat**nat->nat
+DEF testfunc == \\a,b,c. a+b-c
+
+FUN zip3 : (nat**nat**nat->nat)->seq[nat]**seq[nat]**seq[nat]->seq[nat]
+DEF zip3 == \\f. \\s1,s2,s3. IF <>?(s1) or (<>?(s2) or <>?(s3)) THEN <>
+                                                        ELSE f(ft(s1),ft(s2),ft(s3))::zip3(f)(rt(s1),rt(s2),rt(s3))
+                             FI

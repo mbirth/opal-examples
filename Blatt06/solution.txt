@@ -1,0 +1,141 @@
+Hallo Elena,
+
+hier kommen die Lösungen für das fünfte Übungsblatt.
+In unserer Gruppe sind folgende Leute:
+André (ateichi@cs.tu-berlin.de)
+Marisa (marisa@cs.tu-berlin.de)
+Florian (cerbff@cs.tu-berlin.de)
+und ich (mbirth@cs.tu-berlin.de).
+
+Und jetzt die Lösungen:
+
+
+1.2.: FUN myFold : (nat**nat->nat)**nat->seq[nat]->nat
+      DEF myFold == \\f,e. \\s. IF <>?(s) THEN e
+                                          ELSE myFold(f,f(e,ft(s)))(rt(s))
+                                FI
+
+      ListFunc.impl>e myFold(\\\\x,y. x+y,5)(%(1,2,3,4))
+      15                                                
+
+
+
+      FUN newfD : seq[nat]->nat
+      DEF newfD == \\s. myFold(-,2*ft(s))(s)
+
+      ListFunc.impl>e newfD(%(8,3,1))
+      4                              
+
+1.3.: FUN zip3 : (nat**nat**nat->nat)->seq[nat]**seq[nat]**seq[nat]->seq[nat]
+      DEF zip3 == \\f. \\s1,s2,s3. IF <>?(s1) or (<>?(s2) or <>?(s3)) THEN <>
+                                                                      ELSE f(ft(s1),ft(s2),ft(s3))::zip3(f)(rt(s1),rt(s2),rt(s3))
+                                   FI
+
+      ListFunc.impl>e zip3(\\\\x,y,z. x+y-z)(%(1,2,3),%(4,5,6),%(3,2,1))
+      <2,5,8>                                                           
+
+
+
+2.3.: Konstruktoren: FUN person : denotation**denotation**date -> person
+
+      Diskriminatoren: FUN person? : person -> bool
+
+      Selektoren: FUN name surname : person -> denotation
+                  FUN birthdate : person -> date
+
+
+2.4.: FUN earlier? : date**date -> bool
+      DEF earlier?(date(a,b,c),date(d,e,f)) == IF c<f THEN true
+                                                      ELSE IF (c=f) and (b<e) THEN true
+                                                      ELSE IF (c=f) and (b=e) and (a<d) THEN true
+                                                      ELSE false
+                                                      FI
+                                                      FI
+                                               FI
+
+      Person.impl>e earlier?(date(1,1,"2001"!),date("31"!,"12"!,"2000"!))
+      false                                                              
+      Person.impl>e earlier?(date(1,1,"2001"!),date(2,1,"2001"!))
+      true                                                       
+
+
+
+      FUN older? : person**person -> bool
+      DEF older?(person(_,_,a),person(_,_,b)) == IF earlier?(b,a) THEN true ELSE false FI
+
+      Person.impl>e older?(person("Max","Muster",date(1,1,"1979"!)),person("Mina","Muster",date(1,1,"1982"!)))                                                         
+      false                                                                            
+      Person.impl>e older?(person("Max","Muster",date(1,1,"1979"!)),person("Mina","Muster",date(1,1,"1974"!)))                                                         
+      true                                                                             
+
+
+      FUN birthday : person -> nat**nat
+      DEF birthday(person(_,_,date(a,b,_))) == (a,b)
+
+      Person.impl>e birthday(person("Max","Muster",date("29"!,2,"1979"!)))
+      (29,2)                                                              
+
+
+
+      FUN sameName? : person**person -> bool
+      DEF sameName?(person(_,a,_),person(_,b,_)) == IF a=b THEN true ELSE false FI
+
+      Person.impl>e sameName?(person("Max","Muster",date(1,1,1)),person("Mini","Muster",date(1,1,1)))                                                                  
+      true                                                                             
+      Person.impl>e sameName?(person("Max","Muster",date(1,1,1)),person("Mini","Müller",date(1,1,1)))                                                                  
+      false                                                                            
+
+
+3.1.: Konstruktoren: FUN ok : nat -> safeNat
+                     FUN error : denotation -> safeNat
+      Diskriminatoren: FUN ok? error? : safeNat -> bool
+      Selektoren: FUN value : safeNat -> nat
+                  FUN error : safeNat -> denotation
+
+3.4.: FUN safeLift2 : (nat**nat->nat)**(nat**nat->bool)**denotation->safeNat**safeNat->safeNat
+      DEF safeLift2(_,_,_)(error(msg),_) == error(msg)
+      DEF safeLift2(_,_,_)(_,error(msg)) == error(msg)
+      DEF safeLift2(_,_,_)(error(msg1),error(msg2)) == error(msg1 ++ msg2)
+      DEF safeLift2(f,p,d)(ok(n1),ok(n2)) == IF p(n1,n2) THEN ok(f(n1,n2)) ELSE error(d) FI
+
+      !!Beispiele siehe safeAdd, safeSub, safeMult, safeDiv!!
+
+3.5.: FUN safeAdd : safeNat**safeNat -> safeNat
+      DEF safeAdd == \\x,y. safeLift2(+,\\a,b. true,"")(x,y)
+
+      FUN safeSub : safeNat**safeNat -> safeNat
+      DEF safeSub == \\x,y. safeLift2(-,\\a,b. a>=b,"Geht nicht!")(x,y)
+
+      FUN safeMult : safeNat**safeNat -> safeNat
+      DEF safeMult == \\x,y. safeLift2(*,\\a,b. true,"")(x,y)
+ 
+      FUN safeDiv : safeNat**safeNat -> safeNat
+      DEF safeDiv == \\x,y. safeLift2(/,\\a,b. b>0,"Div durch 0 nicht erklaert!")(x,y)
+
+      SafeNat.impl>e safeSub(ok(5),ok(4))
+      ok(1)                              
+      SafeNat.impl>e safeSub(ok(5),ok(6))
+      error("Geht nicht!")               
+      SafeNat.impl>e safeDiv(ok(5),ok(2)) 
+      ok(2)                               
+      SafeNat.impl>e safeDiv(ok(5),ok(0)) 
+      error("Div durch 0 nicht erklaert!")
+
+3.6.: FUN safeMap : (nat->nat)**(nat->bool)**denotation->seq[safeNat]->seq[safeNat]
+      DEF safeMap(_,_,_)(<>) == <>
+      DEF safeMap(a,b,c)(error(msg)::s) == error(msg)::safeMap(a,b,c)(s)
+      DEF safeMap(f,p,m)(ok(a)::s) == IF p(a) THEN ok(f(a))::safeMap(f,p,m)(s) ELSE error(m)::safeMap(f,p,m)(s) FI
+
+      SafeNat.impl>e safeMap(\\\\x. x+5,\\\\x. true,"Fehler!")(%(ok(1),ok(2),ok(3)))
+      <ok(6),ok(7),ok(8)>                                                              
+      SafeNat.impl>e safeMap(\\\\x. 100 / x,\\\\x. x>0,"Div durch 0")(%(ok(1),ok(2),ok(0)))
+      <ok(100),ok(50),error("Div durch 0")>                                            
+
+So, das war's.
+
+Ich hab darauf verzichtet, die ganzen FUNs in die .sign-Dateien zu schieben,
+da ich das so übersichtlicher finde und für unsere Testzwecke das eh
+belanglos ist.
+
+Grüsse,
+   -mARKUS

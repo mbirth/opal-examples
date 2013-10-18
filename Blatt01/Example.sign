@@ -1,0 +1,6 @@
+SIGNATURE Example
+
+IMPORT Nat ONLY nat
+
+FUN incdec : nat -> nat ** nat
+

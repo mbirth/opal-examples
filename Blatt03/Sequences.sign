@@ -1,0 +1,19 @@
+SIGNATURE Sequences
+
+IMPORT Nat COMPLETELY
+IMPORT Seq[nat] COMPLETELY
+IMPORT Real COMPLETELY
+IMPORT Seq[real] COMPLETELY
+
+/* Berechnet das Skalarprodukt zweier als Sequenzen uebergebener Vektoren
+   Die beiden Sequenzen sollten die gleiche Laenge haben */
+FUN scalar : seq[nat]**seq[nat] -> nat
+
+
+/* Erzeugt eine Sequenz mit den Elementen 1..n oder eine leere Sequenz, wenn 0 uebergeben wird */
+FUN genList : nat -> seq[nat]
+
+/* Berechnet ein Polynom unter Verwendung des Horner-Schemas
+   Uebergeben werden hierbei die Koeffizienten (((a)*x+b)*x+c)*x+d als Sequenz <a,b,c,d> und x als
+   zweiter Parameter */
+FUN horner : seq[real]**real -> real

@@ -1,0 +1,40 @@
+IMPLEMENTATION Person
+
+IMPORT Nat COMPLETELY
+IMPORT Denotation COMPLETELY
+
+DATA date == date(day   : nat,
+                  month : nat,
+                  year  : nat)
+
+DATA person == person(name      : denotation,
+                      surname   : denotation,
+                      birthdate : date)
+
+/* Aufg. 2.3. Induzierte Signatur:
+
+   K: FUN person : denotation**denotation**date -> person
+   D: FUN person? : person -> bool
+   S: FUN name surname : person -> denotation
+      FUN birthdate : person -> date
+
+*/
+
+FUN earlier? : date**date -> bool
+DEF earlier?(date(a,b,c),date(d,e,f)) == IF c<f THEN true
+                                                ELSE IF (c=f) and (b<e) THEN true
+                                                ELSE IF (c=f) and (b=e) and (a<d) THEN true
+                                                ELSE false
+                                                FI
+                                                FI
+                                         FI
+
+FUN older? : person**person -> bool
+DEF older?(person(_,_,a),person(_,_,b)) == IF earlier?(b,a) THEN true ELSE false FI
+
+FUN birthday : person -> nat**nat
+DEF birthday(person(_,_,date(a,b,_))) == (a,b)
+
+FUN sameName? : person**person -> bool
+DEF sameName?(person(_,a,_),person(_,b,_)) == IF a=b THEN true ELSE false FI
+

@@ -1,0 +1,8 @@
+SIGNATURE blatt5
+
+IMPORT Nat ONLY nat
+IMPORT Char ONLY char
+IMPORT Seq[nat] ONLY seq[nat]
+IMPORT Seq[char] ONLY seq[char]
+
+

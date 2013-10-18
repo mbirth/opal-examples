@@ -1,0 +1,21 @@
+SIGNATURE Solve
+
+IMPORT Real ONLY real
+IMPORT BOOL ONLY bool
+
+FUN triangleArea : real ** real ** real -> real
+
+/* Rechnet die zwei Nullstellen einer quadratischen Gleichung aus
+   Syntax: qsolve(a,b,c)
+           für eine Gleichung der Form ax²+bx+c
+   Liefert: (n,m) = die beiden Nullstellen */
+FUN qsolve : real ** real ** real -> real ** real
+
+
+/* Prüfen, ob eine quadratische Gleichung nur 1 Lösung hat.
+   Syntax: qunique[2]?(a,b,c)
+           für eine Gleichung in der Form ax²+bx+c
+	   a darf NICHT 0 sein
+   Liefert: Boolean true oder false */
+FUN qunique? : real ** real ** real -> bool
+FUN qunique2? : real ** real ** real -> bool

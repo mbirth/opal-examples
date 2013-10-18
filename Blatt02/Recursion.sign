@@ -1,0 +1,27 @@
+SIGNATURE Recursion
+
+IMPORT Nat ONLY nat
+IMPORT Denotation ONLY denotation
+IMPORT Char ONLY char
+
+/* Addiert zwei natuerliche Zahlen */
+FUN plus : nat ** nat -> nat
+
+/* Multipliziert zwei natuerliche Zahlen */
+FUN mult : nat ** nat -> nat
+
+/* Liefert die Summe aller natuerlichen Zahlen zwischen den zwei Zahlen */
+FUN sum : nat ** nat -> nat
+
+/* Liefert die Summe aller GERADEN natuerlichen Zahlen zw. den zwei Zahlen */
+FUN sumEven : nat ** nat -> nat
+
+/* Liefert true, wenn char in denotation vorkommt, sonst false */
+FUN in? : char ** denotation -> bool
+
+/* Liefert die Vorkommen von char in denotation */
+FUN count : char ** denotation -> nat
+
+/* Liefert die Anzahl von Ziffern in einer denotation */
+FUN countDigits : denotation -> nat
+

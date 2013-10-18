@@ -1,0 +1,103 @@
+IMPLEMENTATION blatt5
+
+IMPORT Nat COMPLETELY
+IMPORT Seq COMPLETELY
+IMPORT Char COMPLETELY
+
+FUN composeApply : (nat->nat)**(nat->nat)**nat->nat
+DEF composeApply == \\f,g,n. f(g(n))
+
+-- flip(funktion,wert1,wert2)
+FUN flip : (nat**nat->nat)**nat**nat->nat
+DEF flip(f,x,y) == f(y,x)
+
+-- twice(funktion,wert)
+FUN twice : (nat->nat)**nat->nat
+DEF twice == \\f,n. f(f(n))
+
+-- Lösung für Aufgabe: 2.3. : Variante 6 funktioniert!
+
+-- curry(funktion(,))(wert1)(wert2)
+FUN curry : (nat**nat->nat)->nat->nat->nat
+DEF curry(f)(x)(y) == f(x,y)
+
+-- uncurry(funktion()(),wert1,wert2)
+FUN uncurry : (nat->nat->nat)**nat**nat->nat
+DEF uncurry(f,x,y) == f(x)(y)
+
+FUN myAdd : nat**nat->nat
+-- DEF myAdd == \\x,y. x+y
+DEF myAdd(x,y) == x+y
+
+FUN myAddCurry : nat->nat->nat
+DEF myAddCurry(x)(y) == curry(myAdd)(x)(y)
+
+FUN plusFive : nat->nat
+DEF plusFive(x) == myAddCurry(x)(5)
+
+-- myMap(funktion)(sequenz)
+FUN myMap : (nat->nat)->seq[nat]->seq[nat]
+DEF myMap(_)(<>) == <>
+DEF myMap(f)(a::s) == f(a)::myMap(f)(s)
+
+-- myFilter(prädikat)(sequenz)
+FUN myFilter : (nat->bool)->seq[nat]->seq[nat]
+DEF myFilter(_)(<>) == <>
+DEF myFilter(p)(a::s) == IF p(a) THEN a::myFilter(p)(s)
+                                 ELSE myFilter(p)(s)
+                         FI
+
+FUN quickSort : seq[nat]->seq[nat]
+DEF quickSort(<>) == <>
+DEF quickSort(a::R) == LET sm == myFilter(\\x. x<a)(R)
+                           me == myFilter(\\x. x=a)(R)
+                           la == myFilter(\\x. x>a)(R)
+                       IN quickSort(sm) ++ %(a) ++ me ++ quickSort(la)
+
+FUN quickSort2 : seq[nat]->seq[nat]
+DEF quickSort2(<>) == <>
+DEF quickSort2(a::R) == LET sm == myFilter(\\x. x<a)(R)
+                            la == myFilter(\\x. x>=a)(R)
+                        IN quickSort2(sm) ++ %(a) ++ quickSort2(la)
+
+FUN toUpper : seq[char]->seq[char]
+DEF toUpper(<>) == <>
+DEF toUpper(a::R) == upper(a)::toUpper(R)
+
+FUN addFive : seq[nat]->seq[nat]
+DEF addFive == \\s. myMap(plusFive)(s)
+
+FUN toEvenhelper : nat->nat
+DEF toEvenhelper == \\x. IF x%2=0 THEN x
+                                 ELSE x+1
+                        FI
+
+FUN toEven : seq[nat]->seq[nat]
+DEF toEven == \\s. myMap(toEvenhelper)(s)
+
+FUN toEven2 : seq[nat]->seq[nat]
+DEF toEven2 == \\s. myMap(\\x. x*2)(s)
+
+FUN splitOddEven : seq[nat]->seq[nat]**seq[nat]
+DEF splitOddEven == \\s. (myFilter(\\x. x%2|=0)(s),myFilter(\\x. x%2=0)(s))
+
+FUN raiseEvenBy10 : seq[nat]->seq[nat]
+DEF raiseEvenBy10 == \\s. LET (od,ev) == splitOddEven(s)
+                          IN myMap(\\x. x+10)(ev)
+
+FUN countEven : seq[nat]->nat
+DEF countEven(<>) == 0
+DEF countEven(a::R) == IF mod(a,2)=0 THEN 1+countEven(R)
+                                ELSE countEven(R)
+                       FI
+
+-- filteredMap(funktion)(prädikat)(sequenz)
+FUN filteredMap : (nat->nat)->(nat->bool)->seq[nat]->seq[nat]
+DEF filteredMap(_)(_)(<>) == <>
+DEF filteredMap(f)(p)(a::s) == IF p(a) THEN f(a)::filteredMap(f)(p)(s)
+                                       ELSE a::filteredMap(f)(p)(s)
+                               FI
+
+-- raise(prädikat)(wert)(sequenz)
+FUN raise : (nat->bool)->nat->seq[nat]->seq[nat]
+DEF raise == \\p. \\x. \\s. filteredMap(myAddCurry(x))(p)(s)

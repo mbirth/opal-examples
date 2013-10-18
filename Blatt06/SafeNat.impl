@@ -1,0 +1,55 @@
+IMPLEMENTATION SafeNat
+
+IMPORT Nat COMPLETELY
+IMPORT NatConv COMPLETELY
+IMPORT Denotation ONLY ++
+IMPORT Seq COMPLETELY
+IMPORT SeqMap COMPLETELY
+
+DATA safeNat == ok (value : nat)
+                error (message : denotation)
+
+DEF `(ok(val)) == "ok(" ++ `(val) ++ ")"
+DEF `(error(msg)) == "error(\"" ++ msg ++ "\")"
+
+FUN safePred : safeNat -> safeNat
+DEF safePred(error(_)) == error("keine Zahl!")
+DEF safePred(ok(n)) == IF n=0 THEN error("null hat keinen...")
+                              ELSE ok(pred(n))
+                       FI
+-- DEF safePred(ok(0)) == error("blabla")
+-- DEF safePred(succ(n)) == ok(n)
+-- oder aber DEF safePred == safeLift(pred,succ?,"Fehler!")
+
+FUN safeSucc : safeNat -> safeNat
+DEF safeSucc(error(_)) == error("blabla")
+DEF safeSucc(ok(n)) == ok(succ(n))
+-- DEF safeSucc == safeLift(succ, \\n. true, "")
+
+FUN safeLift : (nat->nat)**(nat->bool)**denotation->safeNat->safeNat
+DEF safeLift(_,_,_)(error(msg)) == error(msg)
+DEF safeLift(f,p,d)(ok(n)) == IF p(n) THEN ok(f(n)) ELSE error(d) FI
+
+FUN safeLift2 : (nat**nat->nat)**(nat**nat->bool)**denotation->safeNat**safeNat->safeNat
+DEF safeLift2(_,_,_)(error(msg),_) == error(msg)
+DEF safeLift2(_,_,_)(_,error(msg)) == error(msg)
+DEF safeLift2(_,_,_)(error(msg1),error(msg2)) == error(msg1 ++ msg2)
+DEF safeLift2(f,p,d)(ok(n1),ok(n2)) == IF p(n1,n2) THEN ok(f(n1,n2)) ELSE error(d) FI
+
+FUN safeAdd : safeNat**safeNat -> safeNat
+DEF safeAdd == \\x,y. safeLift2(+,\\a,b. true,"")(x,y)
+
+FUN safeSub : safeNat**safeNat -> safeNat
+DEF safeSub == \\x,y. safeLift2(-,\\a,b. a>=b,"Geht nicht!")(x,y)
+
+FUN safeMult : safeNat**safeNat -> safeNat
+DEF safeMult == \\x,y. safeLift2(*,\\a,b. true,"")(x,y)
+
+FUN safeDiv : safeNat**safeNat -> safeNat
+DEF safeDiv == \\x,y. safeLift2(/,\\a,b. b>0,"Div durch 0 nicht erklaert!")(x,y)
+
+FUN safeMap : (nat->nat)**(nat->bool)**denotation->seq[safeNat]->seq[safeNat]
+DEF safeMap(_,_,_)(<>) == <>
+DEF safeMap(a,b,c)(error(msg)::s) == error(msg)::safeMap(a,b,c)(s)
+DEF safeMap(f,p,m)(ok(a)::s) == IF p(a) THEN ok(f(a))::safeMap(f,p,m)(s) ELSE error(m)::safeMap(f,p,m)(s) FI
+

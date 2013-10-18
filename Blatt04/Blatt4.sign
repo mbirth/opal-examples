@@ -1,0 +1,72 @@
+SIGNATURE Blatt4
+
+IMPORT Nat           ONLY nat
+       Seq[nat]      ONLY seq
+       Seq[seq[nat]] ONLY seq
+
+
+-- Design-Hinweis:
+-- Normalerweise ist es nicht besonders sinnvoll, unzusammenhängende
+-- Funktionen in einer Struktur anzusammeln. Der Einfachheit halber
+-- verzichten wir jedoch darauf, das Aufgabenblatt in mehrere Strukturen
+-- aufzuteilen.
+
+
+-- Aufgabe 1 ------------------------------------------------------------------
+
+-- Aufgabe 1.1 ----------------------------------------------------------------
+
+-- Zerlegung einer natürlichen Zahl größer 1 in ihre Primfaktoren
+FUN primeFactorDecomposition: nat -> seq[nat]
+
+
+-- Aufgabe 1.2 ----------------------------------------------------------------
+
+-- Aufteilen einer Sequenz in einen monoton aufsteigenden Präfix und den Rest
+FUN ascendingPrefix: seq[nat] -> seq[nat] ** seq[nat]
+
+
+-- Aufgabe 2 ------------------------------------------------------------------
+
+-- Aufgabe 2.1 (Tut) ----------------------------------------------------------
+
+-- Zerlegung einer Sequenz in monoton aufsteigende Teilsequenzen
+FUN ascendingParts: seq[nat] -> seq[seq[nat]]
+
+
+-- Aufgabe 2.2 (Tut) ----------------------------------------------------------
+
+-- Potenzmenge einer Menge
+FUN powerSet: seq[nat] -> seq[seq[nat]]
+
+
+-- Aufgabe 2.3 ----------------------------------------------------------------
+
+-- Permutationen einer Sequenz
+FUN perm: seq[nat] -> seq[seq[nat]]
+
+
+-- Aufgabe 3 ------------------------------------------------------------------
+
+-- Aufgabe 3.1 (Tut) ----------------------------------------------------------
+
+-- Produkt aus Matrix und Vektor
+-- Die Anzahl der Spalten von M muß gleich der Anzahl der Elemente (Zeilen) 
+--   von v sein.
+FUN matVecProd: seq[seq[nat]] ** seq[nat] -> seq[nat]
+
+
+-- Aufgabe 3.2 ----------------------------------------------------------------
+
+-- Transposition einer Matrix
+FUN transp: seq[seq[nat]] -> seq[seq[nat]]
+
+
+-- Aufgabe 3.3 ----------------------------------------------------------------
+
+-- Produkt zweier Matrizen: C = A x B
+-- A und B müssen verkettet sein, 
+--   d.h. Anzahl der Spalten von A = Anzahl der Zeilen von B
+FUN matMatProd: seq[seq[nat]] ** seq[seq[nat]] -> seq[seq[nat]]
+
+-- ----------------------------------------------------------------------------

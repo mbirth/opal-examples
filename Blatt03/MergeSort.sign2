@@ -1,0 +1,8 @@
+SIGNATURE MergeSort
+
+IMPORT Nat COMPLETELY
+IMPORT Seq[nat] COMPLETELY
+
+-- Sortiert die übergebene Sequenz mit Hilfe des Sortier-
+-- verfahrens MergeSort
+FUN mergeSort : seq[nat] -> seq[nat]

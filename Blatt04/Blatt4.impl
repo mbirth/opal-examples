@@ -1,0 +1,253 @@
+IMPLEMENTATION Blatt4
+
+IMPORT Nat  COMPLETELY
+       Seq  COMPLETELY
+
+
+-- Aufgabe 1 ------------------------------------------------------------------
+
+-- Aufgabe 1.1 ----------------------------------------------------------------
+
+/*
+-- nicht optimierte Variante
+FUN primeFactorDecomposition: nat -> seq[nat]
+DEF primeFactorDecomposition(n) == primeFactors(2, n)
+
+-- primeFactors(k, n) berechnet die Sequenz der Primfaktoren 
+--   von n unter der Voraussetzung, daß n keine Primfaktoren 
+--   besitzt, die kleiner als k sind.
+FUN primeFactors: nat ** nat -> seq[nat]
+DEF primeFactors(k, n) ==
+  IF   n = 1 THEN <>
+  OTHERWISE
+  IF n%k = 0 THEN k :: primeFactors(k, n/k)
+             ELSE      primeFactors(k+1, n)
+  FI
+*/
+
+
+-- optimierte Variante
+FUN primeFactorDecomposition: nat -> seq[nat]
+DEF primeFactorDecomposition(n) == primeFactors(2, 1, n)
+
+-- primeFactors(k, step, n) berechnet die Sequenz der Primfaktoren 
+--   von n unter der Voraussetzung, daß n keine Primfaktoren 
+--   besitzt, die kleiner als k sind. 
+--   Dabei muß step=1 gelten, wenn k gerade ist 
+--         und step=2, wenn k ungerade ist.
+-- (... eine derartige Funktion darf niemals eine "Benutzerfunktion" sein,
+--  da derart seltsame Anwendungsbedingungen nur für eine Hilfsfunktion
+--  akzeptabel sind)
+FUN primeFactors: nat ** nat ** nat -> seq[nat]
+DEF primeFactors(k, step, n) ==
+  IF   n = 1 THEN <>
+  OTHERWISE
+  IF n%k = 0 THEN k :: primeFactors(k, step, n/k)
+             ELSE      primeFactors(k+step, 2, n)
+  FI
+
+
+-- Aufgabe 1.2 ----------------------------------------------------------------
+
+FUN ascendingPrefix: seq[nat] -> seq[nat] ** seq[nat]
+DEF ascendingPrefix(S) ==
+  IF S <>? THEN (<>,<>)
+  ELSE
+    LET
+      n == ft(S)
+      R == rt(S)
+    IN
+      IF R <>? THEN (S,<>)
+      OTHERWISE
+      IF n <= ft(R) THEN
+        (n::S1, S2)
+        WHERE
+        (S1, S2) == ascendingPrefix(R)
+      ELSE
+        (n::(<>), R)
+      FI
+  FI
+
+
+-- Aufgabe 2 ------------------------------------------------------------------
+
+-- Aufgabe 2.1 (Tut) ----------------------------------------------------------
+
+FUN ascendingParts: seq[nat] -> seq[seq[nat]]
+DEF ascendingParts(S) ==
+  IF S <>? THEN <>
+  ELSE
+    LET
+      (part, rest) == ascendingPrefix(S)
+    IN
+      part :: ascendingParts(rest)
+  FI
+
+
+-- Aufgabe 2.2 (Tut) ----------------------------------------------------------
+
+/*
+-- nicht optimierte Variante
+FUN powerSet: seq[nat] -> seq[seq[nat]]
+DEF powerSet ==
+  \\S. IF S <>? THEN <> :: <>
+       ELSE
+         powerSubset ++ prepend(ft(S),powerSubset)
+         WHERE
+         powerSubset == powerSet(rt(S))
+       FI
+*/
+
+-- prepend(n,S) stellt jeder in S enthaltenen Sequenz die Zahl n voran
+FUN prepend: nat ** seq[seq[nat]] -> seq[seq[nat]]
+DEF prepend ==
+  \\n,S. IF S <>? THEN <>
+                  ELSE (n::ft(S))::prepend(n,rt(S))
+         FI
+
+
+-- optimierte Variante
+FUN powerSet: seq[nat] -> seq[seq[nat]]
+DEF powerSet ==
+  \\S. IF S <>? THEN <> :: <>
+                ELSE augment(ft(S),powerSet(rt(S)))
+       FI
+
+-- augment(n,S) = ( prepend(n,S) vereinigt mit S )
+FUN augment: nat ** seq[seq[nat]] -> seq[seq[nat]]
+DEF augment ==
+  \\n,S. IF S <>? THEN <>
+                  ELSE (n::ft(S))::ft(S)::augment(n,rt(S))
+         FI
+
+
+-- Aufgabe 2.3 ----------------------------------------------------------------
+
+FUN perm: seq[nat] -> seq[seq[nat]]
+DEF perm ==
+  \\S. IF S <>? THEN <> :: <>
+                ELSE insertInAllLists(ft(S),perm(rt(S)))
+       FI
+
+-- insertInAllLists(n,S) bildet für jede Sequenz von S alle möglichen 
+-- Zerlegungen in zwei Teile, fügt jeweils n dazwischen ein und liefert
+-- alle resultierenden Sequenzen zurück.
+FUN insertInAllLists: nat ** seq[seq[nat]] -> seq[seq[nat]]
+DEF insertInAllLists ==
+  \\n,S. IF S <>? THEN <>
+                  ELSE insertAtAllPositions(n,ft(S)) 
+                       ++ insertInAllLists(n,rt(S))
+         FI
+
+-- Für jede mögliche Zerlegung von S = S1.S2 erzeugt
+-- insertAtAllPositions(n,S) die Sequenz S' = S1.n.S2 und liefert
+-- alle diese Sequenzen zurück.
+FUN insertAtAllPositions: nat ** seq[nat] -> seq[seq[nat]]
+DEF insertAtAllPositions ==
+  \\n,S. IF S <>? THEN (n :: <>) :: <>
+                  ELSE (n :: S) :: prepend(ft(S),insertAtAllPositions(n,rt(S)))
+         FI
+
+-- Aufgabe 3 ------------------------------------------------------------------
+
+-- zum Testen
+FUN vec1: seq[nat]
+DEF vec1 == %(1,2,3,4)
+
+FUN mat1 mat2: seq[seq[nat]]
+DEF mat1 == %(%(1,2,3,4),
+              %(5,6,7,8),
+              %(9,10,11,12))
+
+DEF mat2 == %(%(1,2,3),
+              %(4,5,6),
+              %(7,8,9),
+              %(10,11,12))
+
+-- zur Kontrolle:
+
+-- mat1 * vec1 = <30,70,110>
+
+-- mat1 * mat2 = << 70, 80, 90>,
+--                <158,184,210>,
+--                <246,288,330>>
+
+-- mat2 * mat1 = << 38, 44, 50, 56>,
+--                < 83, 98,113,128>,
+--                <128,152,176,200>,
+--                <173,206,239,272>>
+
+
+
+-- Funktionen höherer Ordnung dürft ihr in diesem Blatt noch nicht verwenden.
+IMPORT SeqZip    ONLY zip   -- nur für das Skalarprodukt
+       SeqReduce ONLY /     -- nur für das Skalarprodukt
+
+-- Skalarprodukt zweier Vektoren (gleicher Dimension)
+FUN skalarProd: seq[nat] ** seq[nat] -> nat
+DEF skalarProd(v1,v2) == (+,0) / zip(*)(v1,v2)  
+
+
+-- Aufgabe 3.1 (Tut) ----------------------------------------------------------
+
+-- matVecProd(M,v) setzt voraus, daß die Anzahl der Spalten von M
+--   gleich der Anzahl der Elemente (Zeilen) von v ist.
+FUN matVecProd : seq[seq[nat]] ** seq[nat] -> seq[nat]
+DEF matVecProd(M,v) ==
+  IF M <>? THEN <>
+           ELSE skalarProd(ft(M),v) :: matVecProd(rt(M),v)
+  FI
+
+
+-- Aufgabe 3.2 ----------------------------------------------------------------
+
+FUN transp: seq[seq[nat]] -> seq[seq[nat]]
+DEF transp(M) == 
+  IF ft(M) <>? THEN <>
+               ELSE mapFt(M) :: transp(mapRt(M))
+  FI
+
+-- Extraktion der ersten Spalte einer Matrix
+FUN mapFt: seq[seq[nat]] -> seq[nat]
+DEF mapFt(M) ==
+  IF M <>? THEN <>
+           ELSE ft(ft(M)) :: mapFt(rt(M))
+  FI
+
+-- Abschneiden der ersten Spalte einer Matrix
+--   mit Rückgabe der verbleibenden Untermatrix
+FUN mapRt: seq[seq[nat]] -> seq[seq[nat]]
+DEF mapRt(M) ==
+  IF M <>? THEN <>
+           ELSE rt(ft(M)) :: mapRt(rt(M))
+  FI
+
+
+-- Aufgabe 3.3 ----------------------------------------------------------------
+
+-- Produkt zweier Matrizen: C = A x B
+-- A und B müssen verkettet sein, 
+--   d.h. Anzahl der Spalten von A = Anzahl der Zeilen von B
+FUN matMatProd : seq[seq[nat]] ** seq[seq[nat]] -> seq[seq[nat]]
+
+/*
+-- nicht optimierte Version mit zweimaliger Transposition
+DEF matMatProd(M1,M2) ==
+  transp(matMatProdHelp(M1,transp(M2)))
+*/
+
+-- optimierte Version mit einmaliger Transposition
+DEF matMatProd(M1,M2) ==
+  matMatProdHelp(transp(M2),M1)
+
+-- Pseudo-Produkt zweier Matrizen:
+-- Argumente sind A und B, berechnet wird (A x Bt)t, d.h. B x At  
+--                                        (t = Transposition)
+-- A und Bt müssen verkettet sein
+FUN matMatProdHelp : seq[seq[nat]] ** seq[seq[nat]] -> seq[seq[nat]]
+DEF matMatProdHelp(M1,M2) ==
+  IF M2 <>? THEN <>
+            ELSE matVecProd(M1,ft(M2)) :: matMatProdHelp(M1,rt(M2))
+  FI
+
+-- ----------------------------------------------------------------------------

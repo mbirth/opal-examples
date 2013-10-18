@@ -1,0 +1,22 @@
+IMPLEMENTATION MergeSort
+
+IMPORT Real COMPLETELY
+IMPORT Seq[nat] COMPLETELY
+
+-- Unsortierte Sequenz zu Testzwecken
+FUN testSeq : seq[nat]
+DEF testSeq == %(5,7,6,4,8,3,9,2) ++ %(0,1,10)
+
+DEF mergeSort(<>) == <>
+DEF mergeSort(::(a,s)) == IF <>?(s) THEN ::(a,<>)
+                                    ELSE LET(s1,s2) == split(::(a,s))
+                                         IN merge(mergeSort(s1),mergeSort(s2)) FI
+
+FUN split : seq[nat] -> seq[nat]**seq[nat]
+DEF split(<>) == (<>, <>)
+DEF split(n::ns) == LET (s1,s2) == split(ns) IN (s2,n::s1)
+
+FUN merge : seq[nat]**seq[nat] -> seq[nat]
+DEF merge(<>,s) == s
+DEF merge(s,<>) == s
+DEF merge(s1,s2) == IF ft(s1) > ft(s2) THEN ft(s2)::merge(s1,rt(s2)) ELSE ft(s1)::merge(rt(s1),s2) FI

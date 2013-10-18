@@ -1,0 +1,27 @@
+IMPLEMENTATION Solve
+
+IMPORT Real COMPLETELY
+IMPORT BOOL ONLY true false
+
+DEF triangleArea == \\a,b,c. LET 
+                               s == (a+b+c)/2
+                             IN
+                               sqrt(s * (s-a) * (s-b) * (s-c))
+
+DEF qsolve == \\o,p,q.
+	IF o |= 0
+	THEN (0-(p/(2*o))+sqrt(((p/(2*o)) pow 2)-(q/o)),0-(p/(2*o))-sqrt(((p/(2*o)) pow 2)-(q/o)))
+	FI
+
+DEF qunique? == \\o,p,q.
+	LET (a, b) == qsolve(o,p,q)
+	IN
+	IF a=b
+	THEN true ELSE false
+	FI
+
+DEF qunique2? == \\o,p,q.
+	IF a=b
+	WHERE (a,b) == qsolve(o,p,q)
+	THEN true ELSE false
+	FI

@@ -1,0 +1,23 @@
+SIGNATURE Environment
+
+IMPORT Denotation COMPLETELY
+IMPORT SafeNat COMPLETELY
+
+TYPE binding == binding(key: denotation, value: safeNat)
+TYPE environment == environment(bindings: seq[binding])
+
+FUN emptyenv : environment
+FUN lookup : environment ** denotation -> safeNat
+FUN bind : environment ** denotation ** safeNat -> environment
+
+FUN testenv : environment
+DEF testenv == bind(bind(emptyenv,"test",ok(5)),"test2",ok(2))
+
+FUN test1 : safeNat
+DEF test1 == lookup(testenv,"test")
+
+FUN test2 : safeNat
+DEF test2 == lookup(testenv,"test2")
+
+FUN testfail : safeNat
+DEF testfail == lookup(testenv, "isnichdrin")

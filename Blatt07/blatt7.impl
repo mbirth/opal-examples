@@ -1,0 +1,35 @@
+IMPLEMENTATION blatt7
+
+IMPORT Nat COMPLETELY
+IMPORT Seq COMPLETELY
+IMPORT Denotation COMPLETELY
+
+FUN f: nat -> (nat -> nat) -> nat ** nat -> nat
+DEF f == \\a. \\b. \\c,d. ( g(2+f1(a)(b(e),c))
+                            WHERE
+                            (e,g) == f2(c,d,b) )
+
+FUN perms: seq[nat] -> seq[seq[nat]]
+DEF perms(S) == IF <>?(S) THEN <> :: <> ELSE fold(\\a1,b1. fold(\\a2,b2. (b1::b2)::a2,a1)(perms(S-b1)),<>)(S) FI
+
+FUN perms2: seq[nat] -> seq[seq[nat]]
+DEF perms2(S) ==
+  IF <>?(S) THEN
+    empty1 :: empty2
+    WHERE
+      empty1 == <>
+      empty2 == <>
+  ELSE
+    result
+    WHERE
+      result == foldf1(S)
+      foldf1 == fold(f1,empty3)
+      empty3 == <>
+      f1     == \\a1,b1. ( foldf2(perms2(S-b1))
+                           WHERE
+                             foldf2 == fold(f2,a1)
+                             f2     == \\a2,b2. (b1 cons1 b2) cons2 a2 )
+      cons1 == \\b1,b2. b1::b2
+      cons2 == \\b1_cons1_b2,a2. b1_cons1_b2::a2
+  FI
+

@@ -1,0 +1,20 @@
+SIGNATURE SafeNat
+
+IMPORT Nat ONLY nat
+IMPORT Seq[safeNat] ONLY seq
+IMPORT Seq[nat] ONLY seq
+
+TYPE safeNat == ok (value : nat)
+                error (message : denotation)
+
+FUN ` : safeNat -> denotation
+FUN safePred : safeNat -> safeNat
+FUN safeSucc : safeNat -> safeNat
+FUN safeLift : (nat->nat)**(nat->bool)**denotation->safeNat->safeNat
+FUN safeLift2 : (nat**nat->nat)**(nat**nat->bool)**denotation->safeNat**safeNat->safeNat
+FUN safeAdd : safeNat**safeNat -> safeNat
+FUN safeSub : safeNat**safeNat -> safeNat
+FUN safeMult : safeNat**safeNat -> safeNat
+FUN safeDiv : safeNat**safeNat -> safeNat
+FUN safeMap : (nat->nat)**(nat->bool)**denotation->seq[safeNat]->seq[safeNat]
+

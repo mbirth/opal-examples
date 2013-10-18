@@ -1,0 +1,10 @@
+IMPLEMENTATION Geometry
+
+IMPORT Real COMPLETELY
+
+DEF square == \\x. x*x
+
+DEF cube == \\x . x*x*x
+
+DEF rectArea == \\l,w . l*w
+

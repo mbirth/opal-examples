@@ -1,0 +1,15 @@
+IMPLEMENTATION QuickSort
+
+IMPORT Nat COMPLETELY
+IMPORT Seq[nat] COMPLETELY
+
+-- Unsortierte Sequenz zu Testzwecken
+FUN testSeq : seq[nat]
+DEF testSeq == %(5,7,6,4,8,3,9,2) ++ %(0,1,10)
+
+DEF quickSort(<>) == <>
+DEF quickSort(a::R) == LET sm ==      (_ < a)|R
+                           me == a :: (_ = a)|R
+                           la ==      (_ > a)|R
+                       IN quickSort(sm) ++ me ++ quickSort(la)
+

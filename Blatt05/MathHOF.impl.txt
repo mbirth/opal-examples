@@ -1,0 +1,15 @@
+IMPLEMENTATION MathHOF
+
+IMPORT Real COMPLETELY
+
+/* Aufgabe 1.4 */
+
+-- Die Funktion shiftX verschiebt die Funktion h entlang der x-Achse um deltaX.
+DEF shiftX(deltaX)(f)(x) == f(x-deltaX)
+-- Die Funktion mirrorY spiegelt die Funktion h an der y-Achse.
+DEF mirrorY(f)(x) == f(-(x))
+-- Die Funktion myCos soll die Kosinus-Funktion berechnen.
+DEF myCos == shiftX(-(pi/("2"!)))(sin)
+-- Die Funktion myCot soll die Kotangens-Funktion berechnen.
+DEF myCot == mirrorY(shiftX(-(pi/("2"!)))(tan))
+-- DEF myCot == shiftX(-(pi/("2"!)))(mirrorY(tan))

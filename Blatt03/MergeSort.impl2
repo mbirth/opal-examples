@@ -1,0 +1,45 @@
+IMPLEMENTATION MergeSort
+
+IMPORT Nat COMPLETELY
+IMPORT Seq[nat] COMPLETELY
+
+-- Unsortierte Sequenz zu Testzwecken
+FUN testSeq : seq[nat]
+DEF testSeq == %(5,7,6,4,8,3,9,2) ++ %(0,1,10)
+
+-- Sortiert die übergebene Sequenz mit Hilfe des Sortier-
+-- verfahrens MergeSort
+FUN mergeSort : seq[nat] -> seq[nat]
+DEF mergeSort == \\ s .
+	IF <>?(s) THEN <>
+	-- leere Liste sortieren
+	OTHERWISE
+	IF <>?(rt(s)) THEN ft(s) :: <>
+	-- einelementige Liste sortieren
+	ELSE    LET (s1,s2) == split(s)
+                IN  merge(mergeSort(s1),mergeSort(s2))
+		-- andere Listen sortieren
+	FI
+
+-- Splittet eine Liste in zwei Listen
+FUN split : seq[nat] -> seq[nat] ** seq[nat]
+DEF split(<>) ==
+	(<>, <>)
+DEF split(x::xs) ==
+	LET (s1, s2) == split(xs)
+	IN  (s2, x::s1)
+
+-- Fuegt zwei sortierte Listen zusammen
+FUN merge : seq[nat] ** seq[nat] -> seq[nat]
+DEF merge == \\ s1,s2 .
+	IF <>?(s1) THEN s2
+	IF <>?(s2) THEN s1
+	OTHERWISE
+	IF ft(s1) > ft(s2) THEN ft(s2) :: merge(s1,rt(s2))
+	-- erste Element der zweiten Liste ist kleiner oder gleich
+	ELSE ft(s1) :: merge(rt(s1),s2)
+	-- erste Element der ersten Liste ist kleiner
+	FI
+
+-- Testen mit e mergeSort(testSeq)
+-- Ergebnis ist dann <0,1,2,3,4,5,6,7,8,9,10>

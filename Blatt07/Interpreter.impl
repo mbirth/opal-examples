@@ -1,0 +1,10 @@
+IMPLEMENTATION Interpreter
+
+IMPORT SafeNat COMPLETELY
+-- IMPORT Expression COMPLETELY
+IMPORT Environment COMPLETELY
+-- IMPORT Evaluate COMPLETELY
+
+DATA expr == lamda(parameter: denotation, result: expr)
+             apply(fun: expr, arg: expr)
+

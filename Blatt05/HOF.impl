@@ -1,0 +1,96 @@
+IMPLEMENTATION HOF
+
+IMPORT Nat COMPLETELY
+IMPORT Char COMPLETELY
+IMPORT Seq COMPLETELY
+IMPORT SeqMap COMPLETELY
+IMPORT SeqFilter COMPLETELY
+IMPORT Compose ONLY o
+
+/* Aufgabe 1.1 */
+
+DEF composeApply(f, g, x) == f(g(x))
+
+/* Aufgabe 1.2 */
+
+DEF flip == \\ f. \\ x, y. f(y, x)
+
+/* Aufgabe 1.3 */
+
+DEF twice(f) == f o f
+-- oder auch
+--DEF twice == \\ f. \\ x. (f(f(x)))
+
+/* Aufgabe 3.1 */
+
+DEF curry == \\ f. \\ x. \\ y. f(x, y)
+
+/* Aufgabe 3.2 */
+
+DEF uncurry == \\ f. \\ x, y. f(x)(y)
+
+/* Aufgabe 3.3 */
+
+DEF myAdd == \\ x, y. x + y
+
+DEF myAddCurry == curry(myAdd)
+
+DEF plusFive == myAddCurry(5)
+
+/* Aufgabe 4.1 */
+
+DEF myMap(f)(s) ==
+  IF <>?(s) THEN <>
+  ELSE f(ft(s)) :: myMap(f)(rt(s))
+  FI
+
+DEF myFilter(p)(s) ==
+  IF <>?(s) THEN <>
+  OTHERWISE
+  IF p(ft(s)) THEN ft(s) :: myFilter(p)(rt(s))
+  ELSE myFilter(p)(rt(s))
+  FI
+
+DEF quicksort(<>) == <>
+DEF quicksort(a :: R) ==
+  LET
+     smaller == filter(\\ x. x < a)(R)
+     greatereq == filter(\\ x. x >= a)(R)
+  IN
+    quicksort(smaller) ++ %(a) ++ quicksort(greatereq)
+
+DEF toUpper(s) == map(upper)(s)
+
+/* Aufgabe 4.2 */
+
+DEF addFive(s) == map(plusFive)(s)
+
+DEF toEven(s) ==
+  map(\\ x. IF odd?(x) THEN x + 1 ELSE x FI)(s)
+
+DEF splitOddEven(s) ==
+  (filter(odd?)(s), filter(even?)(s))
+
+DEF raiseEvenBy10(s) ==
+  LET (_, evens) == splitOddEven(s) IN
+    map(myAddCurry(10))(evens)
+
+DEF countEven(s) ==
+  #(filter(even?)(s))
+
+/* Aufgabe 4.3 */
+
+DEF filteredMap(p, f)(s) ==
+  IF <>?(s) THEN <>
+  OTHERWISE
+  IF p(ft(s)) THEN f(ft(s)) :: filteredMap(p, f)(rt(s))
+              ELSE ft(s) :: filteredMap(p, f)(rt(s))
+  FI
+
+-- oder
+
+-- DEF filteredMap(p, f)(s) ==
+--   map(\\x. IF p(x) THEN f(x) ELSE x FI)(s)
+
+
+DEF raise(p, n, s) == filteredMap(p, myAddCurry(n))(s)

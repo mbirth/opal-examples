@@ -1,0 +1,11 @@
+SIGNATURE SafeNat
+
+IMPORT Nat ONLY nat
+IMPORT Seq[safeNat] ONLY seq
+IMPORT Seq[nat] ONLY seq
+
+TYPE safeNat == ok (value : nat)
+                error (message : denotation)
+
+FUN ` : safeNat -> denotation
+

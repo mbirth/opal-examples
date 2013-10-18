@@ -1,0 +1,10 @@
+SIGNATURE MathHOF
+
+IMPORT Real ONLY real
+
+/* Aufgabe 1.4 */
+
+FUN shiftX : real -> (real-> real) -> (real->real)
+FUN mirrorY: (real -> real)-> (real->real)
+FUN myCos : real -> real
+FUN myCot : real -> real

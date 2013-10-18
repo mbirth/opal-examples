@@ -1,0 +1,11 @@
+IMPLEMENTATION MathHOF
+
+IMPORT Real COMPLETELY
+
+DEF shiftX == \\f,x,deltaX. f(x-deltaX)
+
+DEF mirrorY == \\f,x. 0-f(x)
+
+DEF myCos == \\x. shiftX(sin,x,0-pi/2)
+
+DEF myCot == \\x. myCos(x)/sin(x)

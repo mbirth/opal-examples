@@ -1,0 +1,23 @@
+SIGNATURE Geometry
+
+IMPORT Real ONLY real
+
+/* Liefert den Quadrat einer Zahl. */
+FUN square : real -> real
+
+/* Liefert den Kubus einer Zahl. */
+FUN cube : real -> real
+
+/* Liefert die Flaeche eines Rechtecks mit der gegebenen Laenge und Breite.
+   Die Funktion akzeptiert nur positive Zahlen. */
+FUN rectArea : real ** real -> real
+
+/* Liefert die Laenge einer Hypotenuse in einem rechtwinkligen Dreieck mit
+   den gegebenen Laengen der Katheten. Die Funktion akzeptiert nur positive
+   Zahlen. */
+FUN hypot : real ** real -> real
+
+/* Liefert das Volumen eines Quaders mit der gegebenen Laenge, Breite und
+   Hoehe. Die Funktion akzeptiert nur positive Zahlen. */
+FUN cuboidVolume : real ** real ** real -> real
+

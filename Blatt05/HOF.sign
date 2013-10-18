@@ -1,0 +1,58 @@
+SIGNATURE HOF
+
+IMPORT Nat ONLY nat
+IMPORT Char ONLY char
+IMPORT Seq[nat] ONLY seq[nat]
+IMPORT Seq[char] ONLY seq[char]
+
+/* Aufgabe 1.1 */
+
+FUN composeApply: (nat -> nat) ** (nat -> nat) ** nat -> nat
+
+/* Aufgabe 1.2 */
+
+FUN flip: (nat ** nat -> nat) -> (nat ** nat -> nat)
+
+/* Aufgabe 1.3 */
+
+FUN twice: (nat -> nat) -> (nat -> nat)
+
+/* Aufgabe 3.1 */
+
+FUN curry: (nat ** nat -> nat) -> nat -> nat -> nat
+
+/* Aufgabe 3.2 */
+
+FUN uncurry: (nat -> nat -> nat) -> nat ** nat -> nat
+
+/* Aufgabe 3.3 */
+
+FUN myAdd: nat ** nat -> nat
+
+FUN myAddCurry: nat -> nat -> nat
+
+FUN plusFive: nat -> nat
+
+/* Aufgabe 4.1 */
+
+FUN myMap: (nat -> nat) -> seq[nat] -> seq[nat]
+
+FUN myFilter: (nat -> bool) -> seq[nat] -> seq[nat]
+
+FUN quicksort: seq[nat] -> seq[nat]
+
+FUN toUpper: seq[char] -> seq[char]
+
+/* Aufgabe 4.2 */
+
+FUN addFive: seq[nat] -> seq[nat]
+FUN toEven: seq[nat] -> seq[nat]
+FUN splitOddEven: seq[nat] -> seq[nat] ** seq[nat]
+FUN raiseEvenBy10: seq[nat] -> seq[nat]
+FUN countEven: seq[nat] -> nat
+
+/* Aufgabe 4.3 */
+
+FUN filteredMap: (nat -> bool) ** (nat -> nat) -> seq[nat] -> seq[nat]
+
+FUN raise: (nat -> bool) ** nat ** seq[nat] -> seq[nat]
